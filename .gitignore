@@ -2,3 +2,5 @@
 .classpath
 target
 .settings
+src/main/java/com/qa/javaAssessment/ExtendedString.java
+src/test/java/com/qa/javaTest/RobustnessTest.java

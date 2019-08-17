@@ -5,74 +5,63 @@ import java.util.List;
 
 public class Assessment {
 
-	// Given a string, return a string where
-	// for every char in the original string,
-	// there are three chars.
-
-	// multChar("The") ==> "TTThhheee"
-	// multChar("AAbb") ==> "AAAAAAbbbbbb"
-	// multChar("Hi-There") ==> "HHHiii---TTThhheeerrreee"
-
+	// Given a string, returns a string where for every char in the original string, there are three chars
 	public String multChar(String input) {
-		String word = "";
-		for (int i = 0; i < input.length(); i++) {
-			word += input.substring(i, i + 1);
-			word += input.substring(i, i + 1);
-			word += input.substring(i, i + 1);
+		return multiplyCharacter(input, 3);
+	}
+	
+	// Given a string and a number of repetitions n,
+	// Returns a string with n instances of every character
+	public String multiplyCharacter(String string, int n) {
+		StringBuilder newString = new StringBuilder();
+		
+		for (int i = 0; i < string.length(); i++) {
+			for (int j = 0; j < n; j++) {
+				newString.append(string.substring(i, i + 1));
+			}
 		}
-		return word;
+		
+		return newString.toString();
 	}
 
-	// Return the string (backwards) that is between the first and last appearance
-	// of "bert"
-	// in the given string, or return the empty string "" if there is not 2
-	// occurances of "bert" - Ignore Case
-
-	// getBert("bertclivebert") ==> "evilc"
-	// getBert("xxbertfridgebertyy") ==> "egdirf"
-	// getBert("xxBertfridgebERtyy") ==> "egdirf"
-	// getBert("xxbertyy") ==> ""
-	// getBert("xxbeRTyy") ==> ""
-
+	// Returns the reversed string between the first and last appearance of "bert"
+	// Returns an empty string if there aren't at least two instances of "bert"
+	// "bert" in the string is case-insensitive
 	public String getBert(String input) {
-		String lowercase = input.toLowerCase();
+		return reverseString(getStringBetween(input, "bert"));
+	}
+	
+	// This method retrieves a string between the first and last instance of keyword within string
+	// The keyword is case insensitive
+	public String getStringBetween(String string, String keyword) {
+		String lowercase = string.toLowerCase();
 		
-		int bert1 = lowercase.indexOf("bert");
-		int bert2 = lowercase.lastIndexOf("bert");
-		if (bert1 < 0 || bert2 < 0 || bert1 == bert2) {
+		int[] instance = { lowercase.indexOf("bert"), lowercase.lastIndexOf("bert") };
+		if (instance[0] < 0 || instance[1] < 0 || instance[0] == instance[1]) {
 			return "";
 		}
-		String forwards = input.substring(bert1 + "bert".length(), bert2);
-		String reversed = "";
-
-		for (int i = 1; i <= forwards.length(); i++) {
-			reversed += forwards.charAt(forwards.length() - i);
-		}
-		return reversed;
+		
+		return string.substring(instance[0] + keyword.length(), instance[1]);
 	}
-
-	// Given three ints, a b c, one of them is small, one is medium and one is
-	// large. Return true if the three values are evenly spaced, so the
-	// difference between small and medium is the same as the difference between
-	// medium and large. Do not assume the ints will come to you in a reasonable
-	// order.
-
-	// evenlySpaced(2, 4, 6) ==> true
-	// evenlySpaced(4, 6, 2) ==> true
-	// evenlySpaced(4, 6, 3) ==> false
-	// evenlySpaced(4, 60, 9) ==> false
-
+	
+	// Reverses a string
+	public String reverseString(String string) {
+		
+		StringBuilder reversedString = new StringBuilder();
+		for (int i = 1; i <= string.length(); i++) {
+			reversedString.append(string.charAt(string.length() - i));
+		}
+		
+		return reversedString.toString();
+	}
+	
+	// Given three integers, returns true if they are evenly distributed
 	public boolean evenlySpaced(int a, int b, int c) {
 		int ab = differenceModulus(a, b); // line a -> b
 		int ac = differenceModulus(a, c); // line a -> c
 		int bc = differenceModulus(b, c); // line b -> c
 
-		// if any of the two lines are equal:
-		if (ab == ac || ab == bc || ac == bc) {
-			return true;
-		}
-
-		return false;
+		return (ab == ac || ab == bc || ac == bc);
 	}
 
 	public int differenceModulus(int a, int b) {
@@ -83,122 +72,89 @@ public class Assessment {
 		}
 	}
 
-	// Given a string and an int n, return a string that removes n letters from the
-	// 'middle' of the string.
-	// The string length will be at least n, and be odd when the length of the input
-	// is odd.
-
-	// nMid("Hello", 3) ==> "Ho"
-	// nMid("Chocolate", 3) ==> "Choate"
-	// nMid("Chocolate", 1) ==> "Choclate"
-
-	public String nMid(String input, int a) {
-		int mid = input.length() / 2;
-		return input.substring(0, mid - (a / 2)) + input.substring(mid + (a / 2) + 1, input.length());
+	// Given a string and an int n, returns the string with n letters removed from the 'middle'
+	// If the string length is even and n is odd, more characters will be removed from the first half of the word
+	public String nMid(String string, int n) {
+		if (string.length() < n) {
+			return "";
+		}
+	
+		int mid = string.length() / 2;
+		return string.substring(0, mid - (n / 2)) + string.substring(mid + (n / 2) + 1, string.length());
 	}
 
-	// Given a string, return the length of the largest "block" in the string.
+	// Given a string, returns the length of the largest "block" in the string.
 	// A block is a run of adjacent chars that are the same.
-	//
-	// superBlock("hoopplla") ==> 2
-	// superBlock("abbCCCddDDDeeEEE") ==> 3
-	// superBlock("") ==> 0
-
-	// Works okay now. :)
-	public static int superBlock(String input) {
-
+	public static int superBlock(String string) {
 		int blockLength = 0;
 
-		for (int i = 0; i < input.length(); i++) {
+		for (int i = 0; i < string.length(); i++) {
 			int j;
 			
-			for (j = 1; i + j < input.length(); j++) {
-				if (input.charAt(i) != input.charAt(i + j)) {
+			for (j = 1; i + j < string.length(); j++) {
+				if (string.charAt(i) != string.charAt(i + j)) {
 					break;
 				}
 			}
 			
 			blockLength = (j > blockLength) ? j : blockLength;
-
 		}
 		
 		return blockLength;
-
 	}
 
-	// given a string - return the number of times "am" appears in the String
-	// ignoring case -
-	// BUT ONLY WHEN the word "am" appears without being followed or proceeded by
-	// other letters
-	//
-	// amISearch("Am I in Amsterdam") ==> 1
-	// amISearch("I am in Amsterdam am I?") ==> 2
-	// amISearch("I have been in Amsterdam") ==> 0
-
+	// given a string - returns the number of times "am" appears in the String
+	// ignores case, am must be a separate word
 	public int amISearch(String arg1) {
-		arg1 = arg1.toLowerCase();
+		return searchStringForKeyword(arg1, "am");
+	}
+	
+	// searches a string for a keyword and returns the number of times the keyword appears in the string
+	// the keyword must be a separate word
+	// both string and keyword are case-insensitive
+	public int searchStringForKeyword(String string, String keyword) {
+		keyword = keyword.trim().toLowerCase();
+		string = string.toLowerCase();
 		int count = 0;
 
-		// check for am at beginning of sentence
-		if (arg1.startsWith("am ")) {
+		if (string.startsWith(keyword + " ")) {
 			count++;
 		}
 
-		// check for am at end of sentence
-		if (arg1.endsWith(" am")) {
+		if (string.endsWith(" " + keyword)) {
 			count++;
 		}
 
-		// check for am in middle of sentence
-		while (arg1.contains(" am ")) {
-			arg1 = arg1.substring(arg1.indexOf(" am ") + "am".length());
+		keyword = " " + keyword + " ";
+		while (string.contains(keyword)) {
+			string = string.substring(string.indexOf(keyword) + keyword.length() - 1); 
+			// - 1 is necessary to prevent the method missing consecutive keywords
 			count++;
 		}
 
 		return count;
-
 	}
-
-	// given a number
-	// if this number is divisible by 3 return "fizz"
-	// if this number is divisible by 5 return "buzz"
-	// if this number is divisible by both 3 and 5return "fizzbuzz"
-	//
-	// fizzBuzz(3) ==> "fizz"
-	// fizzBuzz(10) ==> "buzz"
-	// fizzBuzz(15) ==> "fizzbuzz"
-
 	
-	// COMPLETE
+	// if input is divisible by 3 returns "fizz"
+	// if input is divisible by 5 returns "buzz"
+	// if input is divisible by both 3 and 5 returns "fizzbuzz"
 	public String fizzBuzz(int arg1) {
 		String fizzbuzz = "";
 
 		if (arg1 % 3 == 0) {
 			fizzbuzz += "fizz";
 		}
+		
 		if (arg1 % 5 == 0) {
 			fizzbuzz += "buzz";
 		}
 		
 		return fizzbuzz;
-
 	}
 
-	// Given a string split the string into the individual numbers present
-	// then add each digit of each number to get a final value for each number
-	// String example = "55 72 86"
-	//
-	// "55" will = the integer 10
-	// "72" will = the integer 9
-	// "86" will = the integer 14
-	//
-	// You then need to return the highest vale
-	//
-	// largest("55 72 86") ==> 14
-	// largest("15 72 80 164") ==> 11
-	// largest("555 72 86 45 10") ==> 15
-
-	//COMPLETE
+	// Splits a number string into each constituent number
+	// Add digits of each number to get an integer for each number
+	// Return the highest value integer
 	public int largest(String arg1) {
 		int largest = 0;
 		List<Integer> list = stringToIntArray(arg1, " ");
@@ -211,24 +167,21 @@ public class Assessment {
 		return largest;
 	}
 	
-	
-	public List<Integer> stringToIntArray(String string, String seperator) {
+	// Splits a string of numbers separated by a given separator into a list of integers
+	public List<Integer> stringToIntArray(String string, String separator) {
 		List<Integer> numList = new ArrayList<Integer>();
 		
-		while (string.contains(seperator)) {
-			int seperatorIndex = string.indexOf(seperator);
+		while (string.contains(separator)) {
+			int seperatorIndex = string.indexOf(separator);
 			numList.add(Integer.parseInt(string.substring(0, seperatorIndex)));
 			string = string.substring(seperatorIndex + 1);
 		}
 
 		numList.add(Integer.parseInt(string));
-		
 		return numList;
-
 	}
 
-
-
+	// Returns the sum of the digits of the input
 	public int recursiveAddDigits(int x) {
 		if (x == 0) {
 			return 0;
