@@ -1,13 +1,10 @@
 package com.qa.javaTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import com.qa.javaAssessment.Assessment;
+
+import static org.junit.Assert.*;
 
 public class AssessmentTest {
 	/*
@@ -27,20 +24,23 @@ public class AssessmentTest {
 
 	@Test
 	public void getBertTest() {
-		assertFalse("Are you returning the right thing?", oe.getBert("bertclivebert").equals(""));
-		assertFalse("Close! Now reverse the word", oe.getBert("bertclivebert").equals("clive"));
-		assertEquals("evilc", oe.getBert("bertclivebert"));
-		assertFalse("You to reverse the text between bert, not just remove the words 'bert'", oe.getBert("xxbertfridgebertyy").equals("yyegdirfxx"));
-		assertEquals("egdirf", oe.getBert("xxbertfridgebertyy"));
-		assertEquals("egdirf", oe.getBert("xxBertfridgebERtyy"));
-		assertEquals("", oe.getBert("xxbertyy"));
-		assertEquals("", oe.getBert("xxbeRTyy"));
+		String output = oe.getBert("bertclivebert");
+		assertNotEquals("Empty output", "", output);
+		assertNotEquals("Output is not reversed", "clive", output);
+		assertEquals("Incorrect output","evilc", output);
+
+		output = oe.getBert("xxBertfridgebERtyy");
+		assertNotEquals("String outside bert returned", "yyegdirfxx", output);
+		assertEquals("Incorrect output", "egdirf", output);
+
+		output = oe.getBert("xxbeRTyy");
+		assertEquals("Only one bert should return an empty String", "", oe.getBert("xxbeRTyy"));
 	}
 
 	@Test
 	public void evenlySpacedTest() {
-		assertTrue("Are you returning the right thing?", oe.evenlySpaced(2, 4, 6));
-		assertTrue("Try sort the inputs by size then apply the same logic", oe.evenlySpaced(4, 6, 2));
+		assertTrue(oe.evenlySpaced(2, 4, 6));
+		assertTrue("Incorrect handling of input order", oe.evenlySpaced(4, 6, 2));
 		assertFalse(oe.evenlySpaced(4, 6, 3));
 		assertFalse(oe.evenlySpaced(4, 60, 9));
 	}
